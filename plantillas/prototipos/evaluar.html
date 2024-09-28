@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Rendimiento</title>
+</head>
+<body>
+
+    <div id="resultadoEvaluacion"></div>
+
+    <script>
+        // Criterios de evaluación para cada parámetro
+        const criteriosEvaluacion = {
+            rendimientoFisico: {
+                etapa1: [
+                    {min: 0, max: 55, evaluacion: 'M', puntos: 2},
+                    {min: 56, max: 56, evaluacion: 'R', puntos: 3},
+                    {min: 65, max: 69, evaluacion: 'B', puntos: 4},
+                    {min: 70, max: 75, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa2: [
+                    {min: 0, max: 68, evaluacion: 'M', puntos: 2},
+                    {min: 69, max: 69, evaluacion: 'R', puntos: 3},
+                    {min: 70, max: 75, evaluacion: 'B', puntos: 4},
+                    {min: 76, max: 85, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa3: [
+                    {min: 0, max: 73, evaluacion: 'M', puntos: 2},
+                    {min: 74, max: 74, evaluacion: 'R', puntos: 3},
+                    {min: 75, max: 85, evaluacion: 'B', puntos: 4},
+                    {min: 86, max: 95, evaluacion: 'MB', puntos: 5},
+                ]
+            },
+            indiceEsfuerzo: {
+                etapa1: [
+                    {min: 0, max: 1.5, evaluacion: 'M', puntos: 2},
+                    {min: 1.5, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa2: [
+                    {min: 0, max: 1, evaluacion: 'M', puntos: 2},
+                    {min: 1, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa3: [
+                    {min: 0, max: 0.1, evaluacion: 'M', puntos: 2},
+                    {min: 0.1, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ]
+            },
+            indicadorEficiencia: {
+                etapa1: [
+                    {min: 0, max: 1.5, evaluacion: 'M', puntos: 2},
+                    {min: 1.5, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa2: [
+                    {min: 0, max: 1, evaluacion: 'M', puntos: 2},
+                    {min: 1, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa3: [
+                    {min: 0, max: 0.1, evaluacion: 'M', puntos: 2},
+                    {min: 0.1, max: Infinity, evaluacion: 'MB', puntos: 5},
+                ]
+            },
+            indicadorAdaptacion: {
+                etapa1: [
+                    {min: 41, max: Infinity, evaluacion: 'M', puntos: 2},
+                    {min: 31, max: 40, evaluacion: 'R', puntos: 3},
+                    {min: 20, max: 30, evaluacion: 'B', puntos: 4},
+                    {min: 9, max: 19, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa2: [
+                    {min: 41, max: Infinity, evaluacion: 'M', puntos: 2},
+                    {min: 31, max: 40, evaluacion: 'R', puntos: 3},
+                    {min: 20, max: 30, evaluacion: 'B', puntos: 4},
+                    {min: 9, max: 19, evaluacion: 'MB', puntos: 5},
+                ],
+                etapa3: [
+                    {min: 41, max: Infinity, evaluacion: 'M', puntos: 2},
+                    {min: 31, max: 40, evaluacion: 'R', puntos: 3},
+                    {min: 20, max: 30, evaluacion: 'B', puntos: 4},
+                    {min: 9, max: 19, evaluacion: 'MB', puntos: 5},
+                ]
+            }
+        };
+
+        // Función de evaluación genérica
+        function evaluarParametro(parametro, etapa, valor) {
+            const criterios = criteriosEvaluacion[parametro][`etapa${etapa}`];
+            for (const criterio of criterios) {
+                if (valor >= criterio.min && valor <= criterio.max) {
+                    return criterio;
+                }
+            }
+            return null;
+        }
+
+        // Ejecuta al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedStage = parseInt(localStorage.getItem('selectedStage'));
+            const resultados = {};
+
+            // Evaluar cada parámetro y almacenar los resultados
+            ['rendimientoFisico', 'indiceEsfuerzo', 'indicadorEficiencia', 'indicadorAdaptacion'].forEach(parametro => {
+                const valor = parseFloat(localStorage.getItem(parametro));
+                resultados[parametro] = evaluarParametro(parametro, selectedStage, valor);
+            });
+
+            // Mostrar los resultados en la página
+            const resultadoDiv = document.getElementById('resultadoEvaluacion');
+            resultadoDiv.innerHTML = '';
+            for (const [parametro, resultado] of Object.entries(resultados)) {
+                if (resultado) {
+                    resultadoDiv.innerHTML += `<p>${parametro.charAt(0).toUpperCase() + parametro.slice(1)}: Evaluación: ${resultado.evaluacion}, Puntos: ${resultado.puntos}</p>`;
+                } else {
+                    resultadoDiv.innerHTML += `<p>${parametro.charAt(0).toUpperCase() + parametro.slice(1)}: No se encontró un criterio de evaluación que coincida.</p>`;
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Trazas</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin: 20px 0;
+            font-size: 2em;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        form {
+            background: #1f1f1f;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        form div {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #bb86fc;
+        }
+
+        form input[type="date"],
+        form input[type="text"],
+        form select {
+            width: calc(100% - 40px);
+            padding: 10px 20px 10px 30px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        form i {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #bb86fc;
+        }
+
+        form button {
+            background: #03dac6;
+            border: none;
+            color: #121212;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        form button i {
+            color: #121212;
+        }
+
+        form button:hover {
+            background: #018786;
+        }
+
+        form a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #bb86fc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        form a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th,
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333;
+            text-align: left;
+            color: #e0e0e0;
+        }
+
+        table thead {
+            background: #333;
+            color: #ffffff;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #1e1e1e;
+        }
+
+        table tbody tr:hover {
+            background: #333;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #bbb;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #bb86fc;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .back-button i {
+            color: #bb86fc;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        /* Reglas de responsividad */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
+                margin: 15px 0;
+            }
+
+            form div {
+                margin-bottom: 10px;
+            }
+
+            form input[type="date"],
+            form input[type="text"],
+            form select,
+            form button {
+                width: 100%;
+                padding: 10px;
+            }
+
+            form button {
+                justify-content: center;
+                width: 100%;
+            }
+
+            table th,
+            table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.2em;
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            form label {
+                font-size: 14px;
+            }
+
+            form input[type="date"],
+            form input[type="text"],
+            form select {
+                font-size: 14px;
+            }
+
+            table th,
+            table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .back-button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Trazas de Navegación</h1>
+
+        <!-- Botón de Enlace Atrás -->
+        <a href="{% url 'administrar' %}" class="back-button"><i class="fas fa-arrow-left"></i>Atrás</a>
+
+        <!-- Formulario de Filtros -->
+        <form method="get">
+            <div>
+                <label for="usuario">Usuario:</label>
+                <i class="fas fa-user"></i>
+                <input type="text" name="usuario" id="usuario" value="{{ request.GET.usuario }}" placeholder="Escribe el nombre del usuario">
+            </div>
+
+            <div>
+                <label for="fecha_inicio">Fecha de Inicio:</label>
+                <i class="fas fa-calendar-alt"></i>
+                <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ request.GET.fecha_inicio }}">
+            </div>
+
+            <div>
+                <label for="fecha_fin">Fecha de Fin:</label>
+                <i class="fas fa-calendar-alt"></i>
+                <input type="date" name="fecha_fin" id="fecha_fin" value="{{ request.GET.fecha_fin }}">
+            </div>
+
+            <div>
+                <label for="url">URL:</label>
+                <i class="fas fa-link"></i>
+                <input type="text" name="url" id="url" value="{{ request.GET.url }}" placeholder="Escribe la URL">
+            </div>
+
+            <button type="submit"><i class="fas fa-filter"></i>Filtrar</button>
+            <a href="{% url 'trazas' %}">Restablecer filtros</a>
+        </form>
+
+        <!-- Tabla de Trazas -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>URL</th>
+                    <th>Método HTTP</th>
+                    <th>Fecha y Hora</th>
+                    <th>IP</th>
+                    <th>Agente de Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for traza in trazas %}
+                <tr>
+                    <td>
+                        {% if traza.usuario %}
+                            {{ traza.usuario.nombre }}  <!-- Mostrar el nombre del usuario -->
+                        {% else %}
+                            Anónimo
+                        {% endif %}
+                    </td>
+                    <td>{{ traza.url }}</td>
+                    <td>{{ traza.metodo_http }}</td>
+                    <td>{{ traza.timestamp }}</td>
+                    <td>{{ traza.ip }}</td>
+                    <td>{{ traza.agente_usuario }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-message">No hay trazas para mostrar.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

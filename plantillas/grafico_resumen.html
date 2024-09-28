@@ -1,0 +1,515 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<head>
+
+    <title>Gráfico y Evaluación</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .table-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .chart-container {
+            flex: 2;
+            max-width: 600px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #333;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .table-container {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container1" style="padding-top: 100px;">
+
+        <!-- Información del usuario -->
+        <div class="user-info container mt-18" id="user-info">
+            <div class="row">
+                <!-- Primera fila: Nombre y Apellidos, Etapa, Grado -->
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-user"></i> <strong>Nombre:</strong> <span id="nombreApellidos"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-tasks"></i> <strong>Etapa:</strong> <span id="etapa"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-graduation-cap"></i> <strong>Grado:</strong> <span id="grado"></span>
+                </div>
+
+                <!-- Segunda fila: Curso, Clase, Fecha -->
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-calendar-alt"></i> <strong>Curso:</strong> <span id="curso"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-chalkboard-teacher"></i> <strong>Clase:</strong> <span id="clase"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <i class="fas fa-clock"></i> <strong>Fecha:</strong> <span id="fecha"></span>
+                </div>
+            </div>
+            <!-- Botón para guardar la evaluación -->
+
+
+
+            <!-- Campo oculto para enviar el valor -->
+            <input type="hidden" id="nombre_estudiante" name="nombre_estudiante">
+            {% if tipo_usuario != 'estudiante' %}
+            <button onclick="enviarFormulario()" id="guardarEvaluacion" class="btn btn-primary center">Guardar
+                Evaluación</button>
+            {% endif %}
+            <!-- Agrega un estilo personalizado para mejorar la visualización -->
+            <style>
+                .user-info {
+                    background-color: #1e1e1e;
+                    padding: 15px;
+                    border-radius: 10px;
+                    color: #e0e0e0;
+                    max-width: 1200px;
+                }
+
+                .user-info i {
+                    color: #0d6efd;
+                    /* Cambia este color si deseas un tono diferente para los iconos */
+                    margin-right: 8px;
+                }
+
+                .user-info strong {
+                    margin-left: 5px;
+                }
+
+                .user-info span {
+                    color: #ffffff;
+                }
+
+                .user-info .row {
+                    align-items: center;
+                }
+            </style>
+        </div>
+        <div class="content ">
+            <div class="table-container">
+                <h1></h1>
+                <h2>Resumen de Valores y Evaluación</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Índice</th>
+                            <th>Valor</th>
+                            <th>Evaluación</th>
+                            <th>Puntuación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Esfuerzo</td>
+                            <td id="valorIndiceEsfuerzo"></td>
+                            <td id="evaluacionIndiceEsfuerzo"></td>
+                            <td id="puntosIndiceEsfuerzo"></td>
+                        </tr>
+                        <tr>
+                            <td>Rendimiento</td>
+                            <td id="valorRendimiento"></td>
+                            <td id="evaluacionRendimiento"></td>
+                            <td id="puntosRendimiento"></td>
+                        </tr>
+                        <tr>
+                            <td>Eficiencia</td>
+                            <td id="valorEficiencia"></td>
+                            <td id="evaluacionEficiencia"></td>
+                            <td id="puntosEficiencia"></td>
+                        </tr>
+                        <tr>
+                            <td>Adaptación</td>
+                            <td id="valorAdaptacion"></td>
+                            <td id="evaluacionAdaptacion"></td>
+                            <td id="puntosAdaptacion"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="chart-container ">
+                <h1></h1>
+                <h2> Pulsaciones durante entrenamiento</h2>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Función para cargar la información del usuario desde localStorage
+        function cargarInformacionUsuario() {
+            document.getElementById('nombreApellidos').textContent = localStorage.getItem('nombre') || 'No disponible';
+            document.getElementById('etapa').textContent = localStorage.getItem('selectedStage') || 'No disponible';
+            document.getElementById('grado').textContent = localStorage.getItem('grado') || 'No disponible';
+            document.getElementById('curso').textContent = localStorage.getItem('curso') || 'No disponible';
+            document.getElementById('clase').textContent = localStorage.getItem('clase') || 'No disponible';
+            document.getElementById('fecha').textContent = localStorage.getItem('fecha') || 'No disponible';
+
+
+        }
+        // Criterios de evaluación para cada parámetro
+        const criteriosEvaluacion = {
+            indiceEsfuerzo: {
+                etapa1: [
+                    { min: 0, max: 63.99, evaluacion: 'M', puntos: 2 },
+                    { min: 64, max: 64.99, evaluacion: 'R', puntos: 3 },
+                    { min: 65, max: 69.99, evaluacion: 'B', puntos: 4 },
+                    { min: 70, max: 100, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa2: [
+                    { min: 0, max: 68.99, evaluacion: 'M', puntos: 2 },
+                    { min: 69, max: 69.99, evaluacion: 'R', puntos: 3 },
+                    { min: 70, max: 75.99, evaluacion: 'B', puntos: 4 },
+                    { min: 76, max: 100, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa3: [
+                    { min: 0, max: 73.99, evaluacion: 'M', puntos: 2 },
+                    { min: 74, max: 74.99, evaluacion: 'R', puntos: 3 },
+                    { min: 75, max: 85.99, evaluacion: 'B', puntos: 4 },
+                    { min: 86, max: 100, evaluacion: 'MB', puntos: 5 },//okkkkkkkkkkkkkkk
+                ]
+            },
+
+            rendimientoFisico: {
+                etapa1: [
+                    { min: 0, max: 55.9, evaluacion: 'M', puntos: 2 },
+                    { min: 56, max: 58.99, evaluacion: 'R', puntos: 3 },
+                    { min: 59, max: 61.99, evaluacion: 'B', puntos: 4 },
+                    { min: 62, max: Infinity, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa2: [
+                    { min: 0, max: 63.99, evaluacion: 'M', puntos: 2 },
+                    { min: 64, max: 66.99, evaluacion: 'R', puntos: 3 },
+                    { min: 67, max: 69.99, evaluacion: 'B', puntos: 4 },
+                    { min: 70, max: Infinity, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa3: [
+                    { min: 0, max: 71.99, evaluacion: 'M', puntos: 2 },
+                    { min: 72, max: 76.99, evaluacion: 'R', puntos: 3 },
+                    { min: 77, max: 79.99, evaluacion: 'B', puntos: 4 },
+                    { min: 80, max: Infinity, evaluacion: 'MB', puntos: 5 },//okkkkkkkkkkkkkk
+                ]
+            },
+
+
+            indicadorEficiencia: {
+                etapa1: [
+                    { min: 0, max: 1.49, evaluacion: 'MB', puntos: 5 },
+                    { min: 1.5, max: Infinity, evaluacion: 'M', puntos: 2 },
+                ],
+                etapa2: [
+                    { min: 0, max: 0.99, evaluacion: 'MB', puntos: 5 },
+                    { min: 1, max: Infinity, evaluacion: 'M', puntos: 2 },
+                ],
+                etapa3: [
+                    { min: 0, max: 0.09, evaluacion: 'MB', puntos: 5 },
+                    { min: 0.1, max: Infinity, evaluacion: 'M', puntos: 2 }, //okkkkkkkkkkkkkkkkk
+                ]
+            },
+
+            indicadorAdaptacion: {
+                etapa1: [
+                    { min: 40, max: Infinity, evaluacion: 'M', puntos: 2 },
+                    { min: 30, max: 40, evaluacion: 'R', puntos: 3 },
+                    { min: 19, max: 29, evaluacion: 'B', puntos: 4 },
+                    { min: 1, max: 18, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa2: [
+                    { min: 40, max: Infinity, evaluacion: 'M', puntos: 2 },
+                    { min: 30, max: 40, evaluacion: 'R', puntos: 3 },
+                    { min: 19, max: 29, evaluacion: 'B', puntos: 4 },
+                    { min: 1, max: 18, evaluacion: 'MB', puntos: 5 },
+                ],
+                etapa3: [
+                    { min: 40, max: Infinity, evaluacion: 'M', puntos: 2 },
+                    { min: 30, max: 40, evaluacion: 'R', puntos: 3 },
+                    { min: 19, max: 29, evaluacion: 'B', puntos: 4 },
+                    { min: 1, max: 18, evaluacion: 'MB', puntos: 5 },
+                ]
+            }
+        };
+
+        // Función de evaluación genérica
+        function evaluarParametro(parametro, etapa, valor) {
+            const criterios = criteriosEvaluacion[parametro][`etapa${etapa}`];
+            for (const criterio of criterios) {
+                if (valor >= criterio.min && valor <= criterio.max) {
+                    return criterio;
+                }
+            }
+            return null;
+        }
+
+        // Ejecuta al cargar la página
+        let resultados = {};  // Variable global
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectedStage = parseInt(localStorage.getItem('selectedStage'));
+            //const resultados = {};
+            cargarInformacionUsuario();
+
+            // Evaluar cada parámetro y almacenar los resultados
+            ['rendimientoFisico', 'indiceEsfuerzo', 'indicadorEficiencia', 'indicadorAdaptacion'].forEach(parametro => {
+                const valor = parseFloat(localStorage.getItem(parametro));
+                resultados[parametro] = evaluarParametro(parametro, selectedStage, valor);
+            });
+
+            // Mostrar los valores, evaluaciones y puntuaciones en la tabla
+            document.getElementById('valorIndiceEsfuerzo').textContent = localStorage.getItem('indiceEsfuerzo') || '0';
+            document.getElementById('evaluacionIndiceEsfuerzo').textContent = resultados.indiceEsfuerzo?.evaluacion || '-';
+            document.getElementById('puntosIndiceEsfuerzo').textContent = resultados.indiceEsfuerzo?.puntos || '0';
+
+            document.getElementById('valorRendimiento').textContent = localStorage.getItem('rendimientoFisico') || '0';
+            document.getElementById('evaluacionRendimiento').textContent = resultados.rendimientoFisico?.evaluacion || '-';
+            document.getElementById('puntosRendimiento').textContent = resultados.rendimientoFisico?.puntos || '0';
+
+            document.getElementById('valorEficiencia').textContent = localStorage.getItem('indicadorEficiencia') || '0';
+            document.getElementById('evaluacionEficiencia').textContent = resultados.indicadorEficiencia?.evaluacion || '-';
+            document.getElementById('puntosEficiencia').textContent = resultados.indicadorEficiencia?.puntos || '0';
+
+            document.getElementById('valorAdaptacion').textContent = localStorage.getItem('indicadorAdaptacion') || '0';
+            document.getElementById('evaluacionAdaptacion').textContent = resultados.indicadorAdaptacion?.evaluacion || '-';
+            document.getElementById('puntosAdaptacion').textContent = resultados.indicadorAdaptacion?.puntos || '0';
+
+            // Configuración del gráfico
+            const selectedTime = parseInt(localStorage.getItem('selectedTime')) || 45;
+            let timeIntervals, pulseValues;
+
+            if (selectedTime === 45) {
+                timeIntervals = [0, 10, 20, 30, 40, 45];
+                pulseValues = [
+                    localStorage.getItem('interval-0'),
+                    localStorage.getItem('interval-10'),
+                    localStorage.getItem('interval-20'),
+                    localStorage.getItem('interval-30'),
+                    localStorage.getItem('interval-40'),
+                    localStorage.getItem('interval-45')
+                ];
+            } else if (selectedTime === 50) {
+                timeIntervals = [0, 10, 20, 30, 40, 50];
+                pulseValues = [
+                    localStorage.getItem('interval-0'),
+                    localStorage.getItem('interval-10'),
+                    localStorage.getItem('interval-20'),
+                    localStorage.getItem('interval-30'),
+                    localStorage.getItem('interval-40'),
+                    localStorage.getItem('interval-50')
+                ];
+            } else if (selectedTime === 80) {
+                timeIntervals = [0, 10, 20, 30, 40, 50, 60, 70, 80];
+                pulseValues = [
+                    localStorage.getItem('interval-0'),
+                    localStorage.getItem('interval-10'),
+                    localStorage.getItem('interval-20'),
+                    localStorage.getItem('interval-30'),
+                    localStorage.getItem('interval-40'),
+                    localStorage.getItem('interval-50'),
+                    localStorage.getItem('interval-60'),
+                    localStorage.getItem('interval-70'),
+                    localStorage.getItem('interval-80')
+                ];
+            } else {
+                // Valores predeterminados en caso de que selectedTime no sea 45, 50 o 80
+                timeIntervals = [];
+                pulseValues = [];
+            }
+
+            // Crear el gráfico de líneas
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeIntervals,
+                    datasets: [{
+                        label: 'Pulsaciones',
+                        data: pulseValues,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#444'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Pulsaciones',
+                                color: '#ffffff'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#444'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Tiempo (minutos)',
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        function enviarFormulario() {
+            // Definir los datos que quieres enviar
+            // Obtener el botón por su ID
+            const botonGuardar = document.getElementById('guardarEvaluacion');
+
+            // Desactivar el botón
+            botonGuardar.disabled = true;
+
+            // Mostrar una alerta
+            alert("Datos guardados OK");
+
+
+
+            let datos = {
+                nombre_estudiante: localStorage.getItem('nombre') || 'No disponible',//ok
+                edad: localStorage.getItem('edad') || 'No disponible',//ok
+                curso: localStorage.getItem('curso') || 'No disponible',//ok
+                grado_grupo: localStorage.getItem('grado') || 'No disponible',//ok
+                clase: localStorage.getItem('clase') || 'No disponible',//ok
+                fecha: localStorage.getItem('fecha') || 'No disponible',//ok
+                nombre_escuela: localStorage.getItem('escuela') || 'No disponible',//ok
+                stage: localStorage.getItem('selectedStage') || 'No disponible', // ook
+
+                // Mostrar los valores, evaluaciones y puntuaciones en la tabla
+
+                indice_1: 'Esfuerzo',
+                valor_1: localStorage.getItem('indiceEsfuerzo') || '0',
+                evaluacion_1: resultados.indiceEsfuerzo?.evaluacion || '-',
+                puntuacion_1: resultados.indiceEsfuerzo?.puntos || '0',
+                indice_2: 'Rendimiento',
+                valor_2: localStorage.getItem('rendimientoFisico') || '0',
+                evaluacion_2: resultados.rendimientoFisico?.evaluacion || '-',
+                puntuacion_2: resultados.rendimientoFisico?.puntos || '0',
+                indice_3: 'Eficiencia',
+                valor_3: localStorage.getItem('indicadorEficiencia') || '0',
+                evaluacion_3: resultados.indicadorEficiencia?.evaluacion || '-',
+                puntuacion_3: resultados.indicadorEficiencia?.puntos || '0',
+                indice_4: 'Adaptación',
+                valor_4: localStorage.getItem('indicadorAdaptacion') || '0',
+                evaluacion_4: resultados.indicadorAdaptacion?.evaluacion || '-',
+                puntuacion_4: resultados.indicadorAdaptacion?.puntos || '0'
+            };
+
+            // Crear un formulario dinámico
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "guardar_datos_completos" %}'; // URL de la vista
+
+            // Crear un campo para el token CSRF
+            let csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = '{{ csrf_token }}'; // Token CSRF
+            form.appendChild(csrfInput);
+
+            // Añadir los datos al formulario como campos ocultos
+            for (let key in datos) {
+                if (datos.hasOwnProperty(key)) {
+                    let input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = datos[key];
+                    form.appendChild(input);
+                }
+            }
+
+            // Añadir el formulario al DOM
+            document.body.appendChild(form);
+
+            // Enviar el formulario
+            form.submit();
+        }
+    </script>
+
+</body>
+
+{% endblock %}

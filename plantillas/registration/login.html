@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio Sesion</title>
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, rgba(72, 61, 139, 1), rgba(106, 90, 205, 1));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: rgba(28, 30, 33, 0.85); /* Transparencia añadida */
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px; /* Reducido padding */
+            max-width: 300px; /* Reducido max-width */
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .card img {
+            width: 80px; /* Reducido tamaño */
+            height: 80px; /* Reducido tamaño */
+            margin-bottom: 15px; /* Reducido margen */
+            border-radius: 50%; /* Logo redondeado */
+            object-fit: cover; /* Asegura que el logo se mantenga bien proporcionado */
+        }
+
+        .card h2 {
+            font-weight: 600;
+            margin-bottom: 15px; /* Reducido margen */
+            color: #ffffff;
+            font-size: 18px; /* Reducido tamaño de fuente */
+        }
+
+        .card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px; /* Reducido margen */
+            font-size: 14px; /* Reducido tamaño de fuente */
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 50px;
+            padding: 10px; /* Reducido padding */
+            font-size: 14px; /* Reducido tamaño de fuente */
+            margin-bottom: 15px; /* Reducido margen */
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1); /* Mantener fondo oscuro al seleccionar */
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn {
+            border: none;
+            padding: 10px; /* Reducido padding */
+            border-radius: 50px;
+            width: 100%;
+            color: white;
+            font-size: 14px; /* Reducido tamaño de fuente */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px; /* Reducido margen */
+        }
+
+        .btn-entrar {
+            background-color: #6a11cb;
+        }
+
+        .btn-entrar:hover {
+            background-color: #4b0082;
+        }
+
+        .btn-registrar {
+            background-color: #28a745; /* Color verde para el botón de registro */
+        }
+
+        .btn-registrar:hover {
+            background-color: #218838; /* Color verde oscuro para el hover */
+        }
+
+        .form-check-inline {
+            display: inline-block;
+            margin-right: 5px; /* Reducido margen */
+        }
+
+        .form-check-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px; /* Reducido tamaño de fuente */
+        }
+
+        .form-check-input {
+            background-color: #6a11cb;
+            border: none;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #fff;
+        }
+
+        .alert {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px; /* Reducido margen */
+            font-size: 12px; /* Reducido tamaño de fuente */
+        }
+
+        .link-registrar {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px; /* Reducido tamaño de fuente */
+            display: block;
+            margin-top: 10px; /* Añadido margen superior */
+        }
+
+        .link-registrar:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- Logo de la web -->
+    <h2>FitEduX.cu</h2>
+    <img src="{% static 'logo.png' %}" alt="Logo de la web">
+    <h2 class="fw-bold mb-2 text-uppercase">Bienvenido</h2>
+    <p class="text-white-50 mb-5">Introduce tu Usuario y Contraseña</p>
+
+    <!-- Formulario de inicio de sesión -->
+    <form class="user" method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Su Usuario y contraseña no coinciden. Inténtalo de nuevo.
+        </div>
+        {% endif %}
+        {% if messages %}
+    <div id="messages">
+        {% for message in messages %}
+            <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        // Espera 10 segundos (10000 ms) y luego oculta los mensajes
+        setTimeout(function() {
+            var messages = document.getElementById('messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 10000);
+    </script>
+{% endif %}
+
+
+        <!-- Campo de Usuario -->
+        <input type="text" id="username" name="username" class="form-control" placeholder="Correo" />
+
+        <!-- Campo de Contraseña -->
+        <input type="password" id="id_password" name="password" class="form-control" placeholder="Contraseña" />
+
+        <!-- Botón de Enviar -->
+        <button class="btn btn-entrar" type="submit">Entrar</button>
+        
+
+        
+        <!-- Enlace de Registro -->
+        <a href="{% url 'registro' %}" class="link-registrar">¿No estás registrado? Entra aquí</a>
+    </form>
+</div>
+
+</body>
+</html>

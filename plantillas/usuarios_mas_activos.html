@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Gráficos Modernos de Usuarios y Evaluaciones{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <!-- Título principal con espacio inferior -->
+  <h1 class="text-center text-light mb-4"><i class="fas fa-chart-pie"></i> Estadísticas de Usuarios y Evaluaciones</h1>
+
+  <!-- Contenedor de los gráficos alineados -->
+  <div class="d-flex justify-content-between align-items-start flex-wrap chart-wrapper">
+    
+    <!-- Gráfico de Usuarios -->
+    <div class="chart-container">
+      <h2 class="text-center text-light chart-title"><i class="fas fa-users"></i> Distribución de Usuarios</h2>
+      <canvas id="usuariosChart" class="chart"></canvas>
+    </div>
+
+    <!-- Gráfico de Evaluaciones -->
+    <div class="chart-container">
+      <h2 class="text-center text-light chart-title"><i class="fas fa-tasks"></i> Evaluaciones Realizadas</h2>
+      <canvas id="evaluacionesChart" class="chart"></canvas>
+
+      <!-- Leyenda moderna para las evaluaciones -->
+      <div class="text-center text-light mt-2">
+        <p><i class="fas fa-check-circle"></i> Total de Evaluaciones: {{ total_evaluaciones }}</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Cargar Chart.js diferido al final -->
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Gráfico de Usuarios (Pie Chart)
+    var ctx1 = document.getElementById('usuariosChart').getContext('2d');
+    var usuariosChart = new Chart(ctx1, {
+      type: 'pie',
+      data: {
+        labels: [
+          'Estudiantes: {{ estudiantes_count }}',
+          'Profesores: {{ profesores_count }}',
+          'Admins: {{ admins_count }}'
+        ],
+        datasets: [{
+          data: [
+            {{ estudiantes_count }},
+            {{ profesores_count }},
+            {{ admins_count }}
+          ],
+          backgroundColor: [
+            '#36a2eb',  // Azul claro
+            '#ffcd56',  // Amarillo moderno
+            '#ff6384'   // Rojo claro
+          ],
+          hoverBackgroundColor: [
+            '#36a2ebcc',  // Azul oscuro al hacer hover
+            '#ffcd56cc',  // Amarillo oscuro al hacer hover
+            '#ff6384cc'   // Rojo oscuro al hacer hover
+          ],
+          borderWidth: 0,
+          hoverOffset: 10  // Separación al hacer hover
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,  // No mantener la proporción de aspecto por defecto
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: {
+                size: 12,
+                family: "'Poppins', sans-serif"
+              },
+              color: '#fff'  // Texto blanco para fondo oscuro
+            }
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#000',
+            bodyColor: '#333',
+            borderWidth: 1,
+            borderColor: '#ddd',
+            bodyFont: {
+              size: 12
+            }
+          }
+        }
+      }
+    });
+
+    // Gráfico de Evaluaciones (Bar Chart) - Cantidad de Evaluaciones
+    var ctx2 = document.getElementById('evaluacionesChart').getContext('2d');
+    var evaluacionesChart = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Evaluaciones'],
+        datasets: [{
+          label: 'Total Evaluaciones',
+          data: [{{ total_evaluaciones }}],
+          backgroundColor: ['#1abc9c'],  // Verde moderno
+          borderColor: ['#16a085'],  // Verde oscuro
+          borderWidth: 1,
+          hoverBackgroundColor: ['#16a085']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,  // No mantener la proporción de aspecto por defecto
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#fff'  // Texto blanco para modo oscuro
+            }
+          },
+          x: {
+            ticks: {
+              color: '#fff'  // Texto blanco para modo oscuro
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false  // No necesitamos leyenda en el gráfico
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#000',
+            bodyColor: '#333',
+            borderWidth: 1,
+            borderColor: '#ddd',
+            bodyFont: {
+              size: 12
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Fondo oscuro para toda la página */
+  html, body {
+    background-color: #121212; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    height: 100vh;  /* Ajusta la altura total de la página */
+    margin: 0;
+  }
+
+  /* Ajuste del contenedor para hacer que los gráficos se ajusten sin scroll */
+  .chart-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;  /* Alinea los títulos de los gráficos en la misma altura */
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Estilos para los contenedores de los gráficos */
+  .chart-container {
+    background-color: #1e1e1e; /* Fondo oscuro dentro del contenedor */
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);  /* Sombras */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 0 1 calc(50% - 10px);  /* Cada gráfico ocupa el 50% de la pantalla */
+    height: 300px;  /* Altura máxima */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px; /* Separación debajo de cada gráfico */
+  }
+
+  .chart-container:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);  /* Efecto sombra al hover */
+  }
+
+  /* Forzamos la altura igual para los títulos */
+  .chart-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    margin-top: 10px;  /* Añadimos margen arriba de los títulos */
+    min-height: 40px;  /* Altura mínima para los títulos, asegurando alineación */
+  }
+
+  canvas {
+    flex: 1;  /* Los gráficos ocupan todo el espacio disponible */
+  }
+
+  /* Responsividad para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    .chart-container {
+      flex: 0 1 100%;  /* Los gráficos ocupan el 100% en pantallas pequeñas */
+      height: 250px;  /* Reducimos la altura en pantallas pequeñas */
+    }
+
+    h1, .chart-title {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %}

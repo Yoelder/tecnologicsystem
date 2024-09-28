@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="container mt-5 text-center">
+  <h1>📋 Ayuda: Índice de Funcionalidades</h1>
+  <p class="lead">Aquí encontrarás una guía de las principales funcionalidades de la aplicación de evaluación
+    física.<br>
+    Selecciona una sección para obtener más detalles.</p>
+
+  <!-- Enlaces del índice principal -->
+  <div class="row my-4 justify-content-center">
+    <div class="col-md-4">
+      <a href="#bienvenida" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-door-open"></i> Pantalla
+        de Bienvenida</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#evaluaciones" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-clipboard-check"></i>
+        Evaluaciones</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#saberes" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-lightbulb"></i> Saberes</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#contacto" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-envelope"></i>
+        Contáctanos</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#multimedia" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-video"></i> Multimedia</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#administracion" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-user-cog"></i>
+        Administración</a>
+    </div>
+    <div class="col-md-4">
+      <a href="#estadisticas" class="btn btn-outline-info btn-block py-3 mb-3"><i class="fas fa-chart-line"></i>
+        Estadísticas</a>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Pantalla de Bienvenida -->
+  <h2 id="bienvenida">🏠 Pantalla de Bienvenida</h2>
+  <p>Te ofrece enlaces útiles y acceso a las funcionalidades principales del sistema.</p>
+  <div>
+    <img src="{% static 'Ayuda/home.png' %}" alt="Pantalla de Bienvenida" class="img-fluid my-3">
+    <p><a href="/home/" class="btn btn-info">Ver Pantalla de Bienvenida</a></p>
+  </div>
+
+  <!-- Evaluaciones -->
+  <h2 id="evaluaciones">📝 Evaluaciones</h2>
+  <p>En esta sección, encontrarás los formularios que deben completarse
+    para realizar la evaluación física del estudiante.</p>
+
+  <!-- Formulario 1 -->
+  <h3 id="formulario1">Formulario 1: Datos del Estudiante</h3>
+  <p>Ingresa los datos del estudiante, como nombre, edad y otros detalles relevantes.
+    <br>Cuando este lleno el formulario. Presiona "Siguiente" para continuar.
+  </p>
+  <div>
+    <img src="{% static 'Ayuda/formulario.png' %}" alt="Formulario 1" class="img-fluid my-3">
+    <p><a href="/formulario/" class="btn btn-info">Ver Formulario 1</a></p>
+  </div>
+
+  <!-- Formulario 2 -->
+  <h3 id="formulario2">Formulario 2: Tiempo de Entrenamiento</h3>
+  <p>Selecciona el tiempo de entrenamiento y etapa correspondiente.
+    <br>Presiona "Siguiente" para pasar al siguiente formulario.
+  </p>
+  <div>
+    <img src="{% static 'Ayuda/formulario2.png' %}" alt="Formulario 2" class="img-fluid my-3">
+    <p><a href="/formulario/" class="btn btn-info">Ver Formulario 2</a></p>
+  </div>
+
+  <!-- Formulario 3 -->
+  <h3 id="formulario3">Formulario 3: Pulsaciones</h3>
+  <p>Introduce las pulsaciones del estudiante en los intervalos de tiempo indicados en los campos de entrada.<br>
+    Hay un cronómetro para ayudar con el registro el cual cuenta con dos botones:<br>iniciar ▶️ y restablecer ⏹,
+    cada 10 minutos el cronometro muestra un mensaje para que
+    <br>el usuario introduzca el valor correspondiente una vez llenos todo los campos se
+    <br>activa el boton seguir el cual da paso a a la siguiente ventana .
+  </p>
+  <div>
+    <img src="{% static 'Ayuda/formulario3.png' %}" alt="Formulario 3" class="img-fluid my-3">
+    <p><a href="/formulario/" class="btn btn-info">Ver Formulario 3</a></p>
+  </div>
+
+  <!-- Formulario 4 -->
+  <h3 id="formulario4">Formulario 4: Tiempo Activo</h3>
+  <p>Introduce el tiempo de trabajo activo del estudiante durante el entrenamiento.
+    <br> Luego, presiona "Calcular" para ver los resultados y se activa<br>
+    el boton "Siguiente" que da paso a la vista siguiente.
+  </p>
+  <div>
+    <img src="{% static 'Ayuda/ fromulario4.png' %}" alt="Formulario 4" class="img-fluid my-3">
+    <p><a href="/formulario/" class="btn btn-info">Ver Formulario 4</a></p>
+  </div>
+
+  <!-- Resultados -->
+  <h3 id="resultados">📊 Resultados y Cálculos</h3>
+  <p>En este apartado se muestran Los resultados el Índice de Esfuerzo, rendimiento, eficiencia y adaptación
+    <br>ademas de una grafica de como se comportaron las pulsaciones del evaluado durante el
+    <br>deltipo entrenamiento y otros indicadores claves calculados automáticamente y dependiendo
+    <br>de usuario se puede guardar este registro para futuras consultas y evaluaciones los estudiantes
+    <br>solo podran autoevaluarse pero pero sus evaluciones solo se guardan si las realiza un profesor autorizado.
+  </p>
+  <div>
+    <img src="{% static 'Ayuda/resumen evaluacion.png' %}" alt="Resultados" class="img-fluid my-3">
+    <p><a href="/formulario/" class="btn btn-info">Ver Resultados</a></p>
+  </div>
+
+  <hr>
+
+  <!-- Saberes -->
+  <h2 id="saberes">🧠 Saberes</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 id="chat">Chat con IA</h3>
+      <p>Interactúa con el chat de inteligencia artificial para realizar consultas sobre 
+        cultura física se formula la consulta y se presiona el boton de "Enviar" para obtener la respuesta.</p>
+      <div>
+        <img src="{% static 'Ayuda/chat.png' %}" alt="Chat con IA" class="img-fluid my-3">
+        <p><a href="/chat/" class="btn btn-info">Acceder al Chat con IA</a></p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h3 id="indicaciones">Indicaciones</h3>
+      <p>Accede a información detallada sobre los procedimientos y etapas de
+        evaluación física y de los criterios a tomar en cuenta para dar la evaluacion que se muestra .</p>
+      <div>
+        <img src="{% static 'Ayuda/saber.png' %}" alt="Indicaciones" class="img-fluid my-3">
+        <p><a href="/saberes/" class="btn btn-info">Ver Indicaciones</a></p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Contacto -->
+  <h2 id="contacto">✉️ Contáctanos</h2>
+  <p>Utiliza el formulario de contacto para enviar sugerencias o informar problemas al creador del sitio.</p>
+  <div>
+    <img src="{% static 'Ayuda/contacto.png' %}" alt="Contacto" class="img-fluid my-3">
+    <p><a href="/formulariogm/" class="btn btn-info">Ver Formulario de Contacto</a></p>
+  </div>
+
+  <hr>
+
+  <!-- Multimedia -->
+  <h2 id="multimedia">🎥 Multimedia</h2>
+  <p>Explora videos educativos relacionados con la evaluación física en la sección de multimedia.</p>
+  <div>
+    <img src="{% static 'Ayuda/multimedia.png' %}" alt="Multimedia" class="img-fluid my-3">
+    <p><a href="/multimedia/" class="btn btn-info">Ver Sección de Multimedia</a></p>
+  </div>
+
+  <hr>
+
+  <!-- Administración -->
+  <h2 id="administracion">⚙️ Administración</h2>
+  <p>Solo los usuarios con acceso administrativo pueden gestionar usuarios,<br>
+    niveles de acceso, historial de trazas y otros procesos esto lo define el administrador del sistema.</p>
+  <div>
+    <img src="{% static 'Ayuda/administracion.png' %}" alt="Administración" class="img-fluid my-3">
+    <p><a href="/administrar/" class="btn btn-info">Ver Administración</a></p>
+  </div>
+
+  <hr>
+
+  <!-- Estadísticas -->
+  <h2 id="estadisticas">📈 Estadísticas</h2>
+  <p>En la sección de estadísticas, puedes ver el historial de evaluaciones de los estudiantes<br>
+    y cuenta con varias erramientas para el filtrado y busqueda mas facil dentro de los registros<br>
+    de evaluaciones y permite eliminar y modificar algunos parametros por si existe
+    algun error por parte del usuario</p>
+  <div>
+    <img src="{% static 'Ayuda/estadisticas.png' %}" alt="Estadísticas" class="img-fluid my-3">
+    <p><a href="/evaluaciones/" class="btn btn-info">Ver Sección de Estadísticas</a></p>
+  </div>
+  <h3>Al final de la parte superior en la barra de navegacion se encentra el boton de cerrar sesion</h3>
+</div>
+
+<!-- Estilos Modernos y Modo Oscuro Permanente -->
+<style>
+  body {
+    background-color: #121212;
+    color: #f4f4f4;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  h1,
+  h2,
+  p {
+    color: #f4f4f4;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-outline-info {
+    color: #1abc9c;
+    border-color: #1abc9c;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .btn-outline-info:hover {
+    background-color: #1abc9c;
+    color: white;
+  }
+
+  hr {
+    border: 1px solid #444;
+    margin: 40px 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .btn-info {
+    margin-top: 10px;
+  }
+
+  /* Responsividad */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+
+{% endblock %}

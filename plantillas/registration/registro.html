@@ -1,0 +1,334 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+
+    <link rel="icon" href="{% static 'logo.png' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, rgba(72, 61, 139, 1), rgba(106, 90, 205, 1));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: rgba(28, 30, 33, 0.85);
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .card h2 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 50px;
+            padding: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn {
+            background-color: #6a11cb;
+            border: none;
+            padding: 10px;
+            border-radius: 50px;
+            width: 100%;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background-color: #4b0082;
+        }
+
+        .form-check-inline {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .form-check-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .form-check-input {
+            background-color: #6a11cb;
+            border: none;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #fff;
+        }
+
+        #campoClave {
+            display: none;
+        }
+
+        .alert {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>FitEduX.cu</h2>
+        <img src="{% static 'logo.png' %}" alt="Logo de la web">
+        <h2 class="fw-bold mb-2 text-uppercase">Registro de Usuarios</h2>
+
+        <!-- Bloque para mostrar mensajes generales -->
+        {% if messages %}
+        <div id="messages">
+            {% for message in messages %}
+            <div
+                style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        <script>
+            // Oculta los mensajes después de 10 segundos
+            setTimeout(function () {
+                var messages = document.getElementById('messages');
+                if (messages) {
+                    messages.style.display = 'none';
+                }
+            }, 10000); // 10,000 ms = 10 segundos
+        </script>
+        {% endif %}
+
+        <!-- Formulario de registro -->
+        <form id="registroForm" method="POST" action="{% url 'registro' %}" onsubmit="return validarFormulario()">
+            {% csrf_token %}
+
+            <!-- Campo de Nombre Completo -->
+            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre Completo" required />
+            {% if form.nombre.errors %}
+            <div class="alert" id="errorNombre">
+                {% for error in form.nombre.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            <script>
+                // Oculta el error de nombre después de 10 segundos
+                setTimeout(function () {
+                    var errorNombre = document.getElementById('errorNombre');
+                    if (errorNombre) {
+                        errorNombre.style.display = 'none';
+                    }
+                }, 10000); 
+            </script>
+            {% endif %}
+
+            <!-- Campo de Correo Electrónico -->
+            <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo Electrónico"
+                required />
+            {% if form.correo.errors %}
+            <div class="alert" id="errorCorreo">
+                {% for error in form.correo.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            <script>
+                // Oculta el error de correo después de 10 segundos
+                setTimeout(function () {
+                    var errorCorreo = document.getElementById('errorCorreo');
+                    if (errorCorreo) {
+                        errorCorreo.style.display = 'none';
+                    }
+                }, 10000); 
+            </script>
+            {% endif %}
+
+            <!-- Opciones de tipo de usuario -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="tipo_usuario" id="flexCheckEstudiante"
+                        value="estudiante" checked onclick="mostrarCampoClave()">
+                    <label class="form-check-label" for="flexCheckEstudiante">Estudiante</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="tipo_usuario" id="flexCheckProfesor"
+                        value="profesor" onclick="mostrarCampoClave()">
+                    <label class="form-check-label" for="flexCheckProfesor">Profesor</label>
+                </div>
+            </div>
+
+            <!-- Campo de Clave de Profesores -->
+            <div id="campoClave" style="display: none;">
+                <input type="password" id="claveProfesor" name="clave_profesor" class="form-control"
+                    placeholder="Clave de Profesores" />
+
+            </div>
+
+            <!-- Campo de Contraseña -->
+            <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña"
+                required />
+            {% if form.password.errors %}
+            <div class="alert" id="errorPassword">
+                {% for error in form.password.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            <script>
+                // Oculta el error de contraseña después de 10 segundos
+                setTimeout(function () {
+                    var errorPassword = document.getElementById('errorPassword');
+                    if (errorPassword) {
+                        errorPassword.style.display = 'none';
+                    }
+                }, 10000); 
+            </script>
+            {% endif %}
+
+            <!-- Mostrar errores de Clave de Profesor debajo del campo de contraseña -->
+            {% if form.clave_profesor.errors %}
+            <div class="alert" id="errorClaveProfesor">
+                {% for error in form.clave_profesor.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            <script>
+                // Oculta el error de contraseña después de 10 segundos
+                setTimeout(function () {
+                    var errorPassword = document.getElementById('errorClaveProfesor');
+                    if (errorPassword) {
+                        errorPassword.style.display = 'none';
+                    }
+                }, 10000); 
+            </script>
+            {% endif %}
+
+            <!-- Campo de Confirmación de Contraseña -->
+            <input type="password" id="confirmarPassword" name="confirmar_password" class="form-control"
+                placeholder="Confirmar Contraseña" required />
+            {% if form.confirmar_password.errors %}
+            <div class="alert" id="errorConfirmarPassword">
+                {% for error in form.confirmar_password.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            <script>
+                // Oculta el error de confirmación de contraseña después de 10 segundos
+                setTimeout(function () {
+                    var errorConfirmarPassword = document.getElementById('errorConfirmarPassword');
+                    if (errorConfirmarPassword) {
+                        errorConfirmarPassword.style.display = 'none';
+                    }
+                }, 10000); 
+            </script>
+            {% endif %}
+
+            <!-- Botón de Registro -->
+            <button class="btn" type="submit">Registrarse</button>
+        </form>
+    </div>
+
+    <script>
+        function mostrarCampoClave() {
+            var profesorRadio = document.getElementById('flexCheckProfesor');
+            var campoClave = document.getElementById('campoClave');
+            if (profesorRadio.checked) {
+                campoClave.style.display = 'block';
+                document.getElementById('claveProfesor').required = true;
+            } else {
+                campoClave.style.display = 'none';
+                document.getElementById('claveProfesor').required = false;
+            }
+        }
+
+        function validarFormulario() {
+            var password = document.getElementById('password').value;
+            var confirmarPassword = document.getElementById('confirmarPassword').value;
+            var alertaError = document.getElementById('alertaError');
+
+            // Expresión regular para validar la contraseña
+            var regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&\.])[A-Za-z\d@$!%*?&\.]{8,}$/;
+
+            if (!regexPassword.test(password)) {
+                alertaError.textContent = "La contraseña debe tener al menos 8 caracteres, incluir letras, números y al menos un carácter especial.";
+                alertaError.style.display = 'block';
+
+                setTimeout(function () {
+                    alertaError.style.display = 'none';
+                }, 10000); // Ocultar después de 10 segundos
+
+                return false;
+            }
+
+            if (password !== confirmarPassword) {
+                alertaError.textContent = "Las contraseñas no coinciden. Inténtalo de nuevo.";
+                alertaError.style.display = 'block';
+
+                setTimeout(function () {
+                    alertaError.style.display = 'none';
+                }, 10000); // Ocultar después de 10 segundos
+
+                return false;
+            } else {
+                alertaError.style.display = 'none';
+                return true;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Rendimiento y Tiempo Perdido</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculo de Rendimiento y Tiempo Perdido</h1>
+
+        <!-- Formulario de Entrada -->
+        <form id="calculationForm">
+            <div class="form-group">
+                <label for="tpl">Tiempo Total de la Prueba (TPL) en segundos:</label>
+                <input type="number" id="tpl" name="tpl" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tiempoReal">Tiempo Real en segundos:</label>
+                <input type="number" id="tiempoReal" name="tiempoReal" class="form-control" required>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="calcular()">Calcular</button>
+        </form>
+
+        <!-- Resultados -->
+        <div id="result" class="result">
+            <p><strong>Tiempo Perdido:</strong> <span id="tiempoPerdido">-</span> segundos</p>
+            <p><strong>Indicador de Rendimiento:</strong> <span id="indicadorRendimiento">-</span>%</p>
+        </div>
+    </div>
+
+    <script>
+        function calcular() {
+            // Obtener los valores del formulario
+            var tpl = parseFloat(document.getElementById('tpl').value);
+            var tiempoReal = parseFloat(document.getElementById('tiempoReal').value);
+
+            // Verificar si los valores son válidos
+            if (isNaN(tpl) || isNaN(tiempoReal) || tpl <= 0 || tiempoReal < 0) {
+                alert("Por favor, introduce valores válidos.");
+                return;
+            }
+
+            // Calcular el Tiempo Perdido
+            var tiempoPerdido = tpl - tiempoReal;
+
+            // Calcular el Indicador de Rendimiento
+            var indicadorRendimiento = ((tpl - tiempoReal) / tpl) * 100;
+
+            // Mostrar los resultados
+            document.getElementById('tiempoPerdido').textContent = tiempoPerdido.toFixed(2);
+            document.getElementById('indicadorRendimiento').textContent = indicadorRendimiento.toFixed(2);
+        }
+    </script>
+</body>
+</html>

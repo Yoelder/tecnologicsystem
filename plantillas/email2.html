@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<section class="d-flex flex-column min-vh-100 gradient-custom">
+  <div class="container py-5 flex-grow-1">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+        <div class="card text-white" style="border-radius: 0.8rem; background-color: rgba(33, 33, 33, 0.85);">
+          <div class="card-body p-3 text-center">
+
+            <!-- Agregar logo redondeado -->
+            <div class="mb-4">
+              <img src="{% static 'logo.png' %}" alt="Logo" class="img-fluid rounded-circle" style="width: 80px; height: 80px;">
+            </div>
+
+            <div class="mb-md-2 mt-md-1 pb-1">
+              <form action="contactar/" method="post">{% csrf_token %}
+
+                {% if messages %}
+                <div class="alert alert-success" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <h2 class="fw-bold mb-2 text-uppercase" style="font-size: 1.3rem;">Contáctanos</h2>
+
+                <p class="text-white-50 mb-3" style="font-size: 0.72rem;">Formulario para contactarnos vía correo o enviar sugerencias o quejas. También puedes usar WhatsApp:  
+                  <a href="https://wa.me/59240990?text=Hola" class="fa fa-whatsapp bg-success fa-1x" id="WPS"></a>
+                </p>
+
+                <div class="form-outline form-white mb-2">
+                  <input type="text" class="form-control bg-dark text-white" name="txtAsunto" placeholder="Asunto o Nombre" required>
+                </div>
+                
+                <div class="form-outline form-white mb-2">
+                  <input type="email" class="form-control bg-dark text-white" name="txtEmail" placeholder="Correo" required>
+                </div>
+
+                <div class="form-outline form-white mb-2">
+                  <textarea class="form-control bg-dark text-white" name="txtMensaje" required placeholder="Mensaje"></textarea>
+                </div>
+
+                <button class="btn btn-outline-light btn-md px-3" type="submit">
+                  <i class="fa fa-envelope fa-lg"></i> Enviar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gradient-custom {
+    background: #0d47a1;
+    background: linear-gradient(to right, rgb(5, 11, 19), rgb(4, 45, 116));
+  }
+
+  .form-control {
+    border-radius: 0.32rem; /* Reducido */
+    border: 1px solid #444;
+    font-size: 0.8rem; /* Reducido */
+    padding: 8px 11px; /* Reducido */
+  }
+
+  .form-control:focus {
+    background-color: #2c2c2c;
+    border-color: #555;
+    color: #fff;
+  }
+
+  .btn-outline-light {
+    background-color: #0d47a1;
+    border-color: #0d47a1;
+    font-size: 0.72rem; /* Reducido */
+    padding: 8px 16px; /* Reducido */
+  }
+
+  .btn-outline-light:hover {
+    background-color: #0c398e;
+    border-color: #0c398e;
+  }
+
+  .card {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  #WPS {
+    color: #ffffff;
+    margin-left: 6px; /* Reducido */
+    font-size: 0.9rem; /* Reducido */
+  }
+
+  #WPS:hover {
+    color: #25D366;
+    transform: scale(1.1);
+  }
+
+  .min-vh-100 {
+    min-height: 100vh;
+  }
+
+  .flex-grow-1 {
+    flex-grow: 1;
+  }
+
+  .rounded-circle {
+    border-radius: 50%;
+  }
+</style>
+{% endblock %}

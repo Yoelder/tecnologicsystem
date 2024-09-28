@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!-- Contenido principal -->
+<head>
+
+  <title>Formulario Moderno</title>
+  <!-- Bootstrap CSS -->
+
+</head>
+<style>
+    /* Personaliza estilos aquí */
+    #formulario1Container {
+       /* Ajusta este valor según el tamaño de tu barra de navegación */
+      padding-top:25px;
+      padding-bottom:75px;
+    }
+    #formulario2Container {
+       /* Ajusta este valor según el tamaño de tu barra de navegación */
+      padding-bottom: 75px;
+      padding-top:25px;
+    }
+  </style>
+  <div class="container md-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card" id="formulario1Container">
+          <div class="card-header bg-primary text-white">
+            Formulario 1
+          </div>
+          <div class="card-body">
+            <form id="formulario1">
+              <div class="form-group">
+                <label for="nombre">Nombre y Apellidos</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre y apellidos">
+              </div>
+              <div class="form-group">
+                <label for="telefono">Número de Teléfono</label>
+                <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su número de teléfono">
+              </div>
+              <div class="form-group">
+                <label for="edad">Edad</label>
+                <input type="number" class="form-control" id="edad" placeholder="Ingrese su edad">
+              </div>
+              <div class="form-group">
+                <label for="sexo">Sexo</label>
+                <select class="form-control" id="sexo">
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="peso">Peso (kg)</label>
+                <input type="number" class="form-control" id="peso" placeholder="Ingrese su peso en kilogramos">
+              </div>
+              <div class="form-group">
+                <label for="talla">Talla (cm)</label>
+                <input type="number" class="form-control" id="talla" placeholder="Ingrese su talla en centímetros">
+              </div>
+              <button type="button" class="btn btn-primary" onclick="mostrarFormulario2()">Siguiente</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-5" id="formulario2Container" style="display:none;">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Formulario 2
+          </div>
+          <div class="card-body">
+            <form id="formulario2">
+              <div class="form-group">
+                <label for="pulsaciones">Pulsaciones por Minuto</label>
+                <input type="number" class="form-control" id="pulsaciones" placeholder="Ingrese sus pulsaciones por minuto">
+              </div>
+              <div class="form-group">
+                <label for="fecha">Fecha y Hora Actual</label>
+                <input type="date" class="form-control" id="fecha" >
+              </div>
+              <div class="form-group">
+                <label for="presion">Presión Arterial</label>
+                <input type="text" class="form-control" id="presion" placeholder="Ingrese su presión arterial">
+              </div>
+              <div class="form-group">
+                <label for="fase">Fase de Entrenamiento</label>
+                <input type="text" class="form-control" id="fase" placeholder="Ingrese la fase de entrenamiento">
+              </div>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS y dependencias -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    function mostrarFormulario2() {
+      document.getElementById('formulario1Container').style.display = 'none';
+      document.getElementById('formulario2Container').style.display = 'block';
+    }
+  </script>
+
+{% endblock %}

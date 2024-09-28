@@ -1,0 +1,59 @@
+<form method="POST" action="{% url 'guardar_datos_completos' %}">
+    {% csrf_token %}
+    <!-- Información del estudiante -->
+    <h2>Información del Estudiante</h2>
+    Nombre: <input type="text" name="nombre_estudiante" required><br>
+    Edad: <input type="number" name="edad" required><br>
+    Curso: <input type="text" name="curso" required><br>
+    Grado y Grupo: <input type="text" name="grado_grupo" required><br>
+    Clase: <input type="text" name="clase" required><br>
+
+    <!-- Información de la evaluación -->
+    <h2>Información de la Evaluación</h2>
+    Fecha: <input type="date" name="fecha" required><br>
+    Escuela: <input type="text" name="nombre_escuela" required><br>
+
+        <!-- Selección de la etapa -->
+        <h2>Seleccionar Etapa</h2>
+        <select name="stage">
+            {% for etapa in etapas %}
+                <option value="{{ etapa.id }}">{{ etapa.nombre }}</option>
+            {% endfor %}
+        </select><br>
+    <!-- Índices de Evaluación -->
+    <h2>Índices de Evaluación</h2>
+    <table>
+        <tr>
+            <th>Índice</th>
+            <th>Valor</th>
+            <th>Evaluación</th>
+            <th>Puntuación</th>
+        </tr>
+        <tr>
+            <td><input type="text" name="indice_1" value="Índice de esfuerzo" required></td>
+            <td><input type="number" step="0.01" name="valor_1" value="21.98" required></td>
+            <td><input type="text" name="evaluacion_1" value="M" required></td>
+            <td><input type="number" name="puntuacion_1" value="2" required></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="indice_2" value="Rendimiento" required></td>
+            <td><input type="number" step="0.01" name="valor_2" value="88.89" required></td>
+            <td><input type="text" name="evaluacion_2" value="MB" required></td>
+            <td><input type="number" name="puntuacion_2" value="5" required></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="indice_3" value="Eficiencia" required></td>
+            <td><input type="number" step="0.01" name="valor_3" value="0.25" required></td>
+            <td><input type="text" name="evaluacion_3" value="MB" required></td>
+            <td><input type="number" name="puntuacion_3" value="5" required></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="indice_4" value="Adaptación" required></td>
+            <td><input type="number" step="0.01" name="valor_4" value="20" required></td>
+            <td><input type="text" name="evaluacion_4" value="B" required></td>
+            <td><input type="number" name="puntuacion_4" value="4" required></td>
+        </tr>
+    </table>
+
+    <button type="submit">Guardar Datos</button>
+</form>

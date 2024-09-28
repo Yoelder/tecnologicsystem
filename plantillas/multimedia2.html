@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<!-- Contenido principal -->
+
+<body class="container bg-dark" style="background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);">
+
+  <div class="container">
+    <h2 class="mt-5 mb-4 text-center text-light text-uppercase" style="letter-spacing: 2px; font-weight: 300;">¿Qué es la EDUCACIÓN FÍSICA?</h2>
+
+    <!-- Video responsivo y centrado -->
+    <div class="embed-responsive embed-responsive-16by9 mx-auto"
+      style="max-width: 800px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); border-radius: 15px; overflow: hidden;">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/Rm-a1vf0QtU"
+        title="¿Qué es la EDUCACIÓN FÍSICA? Historia, actividades, importancia, deporte, salud"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="border: none;"></iframe>
+    </div>
+
+    <h2 class="mt-5 mb-4 text-center text-light text-uppercase" style="letter-spacing: 2px; font-weight: 300;">Forma correcta de medir Pulso </h2>
+    <div class="mt-4 embed-responsive embed-responsive-16by9 mx-auto"
+      style="max-width: 800px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); border-radius: 15px; overflow: hidden;">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/8LfoD0DoZRI?si=82wsEbxQlNmAilVM"
+        title="YouTube video player" allowfullscreen style="border: none;"></iframe>
+    </div>
+
+   <h1></h1>
+
+  <!-- Agregar enlaces a los archivos de Bootstrap JS y jQuery (opcional) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}

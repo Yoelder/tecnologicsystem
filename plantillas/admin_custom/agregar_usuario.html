@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario</title>
+    <!-- Enlazar Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #181818;
+            --form-background-color: #212121;
+            --text-color: #e0e0e0;
+            --accent-color: #1DB954;
+            --input-background-color: #333333;
+            --button-hover-color: #1ed760;
+            --error-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: var(--form-background-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            display: grid;
+            gap: 20px;
+        }
+
+        form p {
+            margin: 0;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background-color: var(--input-background-color);
+            color: var(--text-color);
+            font-size: 15px;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-color);
+        }
+
+        /* Estilo para mensajes de error */
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+        }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+                box-shadow: none;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 15px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            textarea,
+            select {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Agregar Usuario</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>

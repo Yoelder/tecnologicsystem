@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<body class="container" style="background-color: #1a1a1a;"> <!-- Fondo más claro -->
+    
+    <div class="container mt-5">
+        <div class="card bg-dark text-white shadow-sm rounded">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4 text-uppercase">Cálculo del Indicador de Adaptación (IAC)</h2>
+
+                <!-- Formulario que contiene los inputs y el botón -->
+                <form onsubmit="event.preventDefault(); calcularIAC();">
+                    
+                    <div class="form-group mb-4">
+                        <label for="pr"><i class="fa fa-heartbeat fa-lg text-danger" aria-hidden="true"></i> Pulso en reposo (PR):</label>
+                        <input type="number" id="pr" name="pr" class="form-control bg-dark text-white rounded-pill" placeholder="Ingrese PR" required>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label for="p5"><i class="fa fa-heartbeat fa-lg text-danger" aria-hidden="true"></i> Pulsaciones 5 minutos después del trabajo (P5'):</label>
+                        <input type="number" id="p5" name="p5" class="form-control bg-dark text-white rounded-pill" placeholder="Ingrese P5'" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block rounded-pill">Calcular IAC</button>
+                </form>
+                
+                <!-- Espacio para el resultado -->
+                <div id="resultado" class="mt-4 text-center font-weight-bold text-info" style="min-height: 100px; display: flex; align-items: center; justify-content: center;">
+                    <!-- Este espacio estará disponible incluso antes del cálculo -->
+                    <span>El resultado aparecerá aquí.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    function calcularIAC() {
+        var p5 = parseInt(document.getElementById("p5").value);
+        var pr = parseInt(document.getElementById("pr").value);
+        var iac = p5 - pr;
+
+        var calificacion = "";
+        var puntos = 0;
+                                                       
+        if (iac > 40) {
+            calificacion = "Mal";
+            puntos = 2;
+        } if (iac >= 30 && iac <= 40) {
+            calificacion = "Regular";
+            puntos = 3;
+        } if (iac >= 19 && iac <= 29) {
+            calificacion = "Bien";
+            puntos = 4;
+        } if (iac <= 18) {
+            calificacion = "Muy bien";
+            puntos = 5;
+        } if (iac <09) {
+            calificacion = "Error Revisa los datos ingresados";
+            puntos =000;
+        }
+        document.getElementById("resultado").innerHTML = 
+            "El valor de IAC es: " + iac + "<br>" +
+            "Calificación: " + calificacion + "<br>" +
+            "Puntuación: " + puntos;
+    }
+</script>
+
+{% endblock %}
+Mayor que 40 pm
+Mal
+2 Puntos
+Entre 40 y 30 pm
+Regular
+3 Puntos
+Entre 29 y 19 pm
+Bien
+4 Puntos
+Entre 19  y + - 10
+Muy bien
+5 Puntos

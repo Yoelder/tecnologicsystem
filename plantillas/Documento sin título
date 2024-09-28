@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos de Usuarios y Evaluaciones</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            margin: 20px;
+        }
+
+        /* Hacer el gráfico más grande */
+        #usuariosChart, #evaluacionesChart {
+            width: 800px !important;
+            height: 800px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gráficos de Usuarios Registrados y Evaluaciones</h1>
+
+    <!-- Gráfico de Usuarios -->
+    <h2>Gráfico de Usuarios Registrados</h2>
+    <canvas id="usuariosChart"></canvas>
+
+    <!-- Gráfico de Evaluaciones -->
+    <h2>Total de Evaluaciones</h2>
+    <canvas id="evaluacionesChart"></canvas>
+
+    <script>
+        // Gráfico de Usuarios
+        var ctx = document.getElementById('usuariosChart').getContext('2d');
+        var usuariosChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    'Estudiantes: {{ estudiantes_count }}',
+                    'Profesores: {{ profesores_count }}',
+                    'Admins: {{ admins_count }}'
+                ],
+                datasets: [{
+                    label: 'Cantidad de usuarios',
+                    data: [
+                        {{ estudiantes_count }},
+                        {{ profesores_count }},
+                        {{ admins_count }}
+                    ],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',  // Azul claro
+                        'rgba(255, 206, 86, 0.2)',  // Amarillo
+                        'rgba(255, 99, 132, 0.2)'   // Rojo
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',  // Azul claro
+                        'rgba(255, 206, 86, 1)',  // Amarillo
+                        'rgba(255, 99, 132, 1)'   // Rojo
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            // Hacer la leyenda más clara y mostrar los números
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Evaluaciones (Simple, mostrando el total de evaluaciones)
+        var ctx2 = document.getElementById('evaluacionesChart').getContext('2d');
+        var evaluacionesChart = new Chart(ctx2, {
+            type: 'bar',  // Tipo de gráfico: barra
+            data: {
+                labels: ['Total de Evaluaciones'],
+                datasets: [{
+                    label: 'Cantidad de Evaluaciones',
+                    data: [{{ total_evaluaciones }}],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)'  // Verde claro
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)'  // Verde
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false  // No necesitamos leyenda para este gráfico simple
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %} {% endblock %}</title>
+  <link rel="icon" href="{% static 'logo.png' %}" type="image/x-icon">
+
+  <!-- Google Fonts: Poppins (añade más si es necesario) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- Font Awesome (elige una versión) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Estilos personalizados -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      /* Fondo suave */
+      padding-top: 70px;
+      /* Ajusta el espacio para la barra de navegación fija */
+    }
+
+    /* Navbar Estilo */
+    .navbar {
+      transition: background-color 0.5s ease;
+    }
+
+    .navbar-dark.bg-info {
+      background-color: #2c3e50 !important;
+      /* Tono más oscuro */
+    }
+
+    .navbar-brand img {
+      border-radius: 50%;
+      /* Logo redondeado */
+      width: 40px;
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-brand img:hover {
+      transform: scale(1.1);
+      /* Efecto hover en el logo */
+    }
+
+    .navbar-nav .nav-link {
+      font-weight: 500;
+      color: #ecf0f1 !important;
+      margin-right: 15px;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #1abc9c !important;
+      /* Cambio de color en hover */
+      transform: scale(1.1);
+      /* Efecto hover en iconos */
+    }
+
+    .navbar-nav .active>.nav-link {
+      color: #1abc9c !important;
+      /* Color del enlace activo */
+    }
+
+    /* Footer Estilo Fino */
+    .footer {
+      background-color: #2c3e50;
+      /* Mismo color que la navbar */
+      color: #ecf0f1;
+      padding: 10px 0;
+      /* Reducción de padding para un diseño más fino */
+      text-align: center;
+      font-size: 14px;
+      /* Fuente más pequeña para mayor sutileza */
+    }
+
+    .footer a {
+      color: #ecf0f1;
+      margin: 0 8px;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #1abc9c;
+    }
+
+    /* Hover sobre botones y links */
+    .btn {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #1abc9c;
+      color: white;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top">
+    <a class="navbar-brand" href="/home/">
+      <img src="{% static 'logo.png' %}" alt="Logo"> FitEduX.cu
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item {% if request.path == '/home/' %}active{% endif %}">
+          <a class="nav-link" href="/home/"> <i class="fa fa-home"></i> Inicio</a>
+        </li>
+        <li class="nav-item {% if request.path == '/formulario/' %}active{% endif %}">
+          <a class="nav-link" href="/formulario/"><i class="fa fa-address-card-o"></i> Evaluar</a>
+        </li>
+        <li class="nav-item dropdown {% if request.path == '/saberes/' or request.path == '/chat/' or request.path == '/ayuda/' %}active{% endif %}">
+          <a class="nav-link dropdown-toggle" href="/saberes/" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-university"></i> Saberes
+          </a>
+          <div class="dropdown-menu bg-info" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/chat/"><i class="fa fa-android"></i> Chat con IA</a>
+            <a class="dropdown-item" href="/saberes/"><i class="fa fa-university"></i> Indicaciones</a>
+            <a class="dropdown-item" href="/ayuda/"><i class="fa fa-info-circle"></i> Ayuda</a>
+          </div>
+        </li>
+        <li class="nav-item {% if request.path == '/formulariogm/' %}active{% endif %}">
+          <a class="nav-link" href="/formulariogm/"><i class="fa fa-envelope"></i> Contáctanos</a>
+        </li>
+        <li class="nav-item {% if request.path == '/estadisticas/' %}active{% endif %}">
+          <a class="nav-link" href="/multimedia/"><i class="fa fa-linux"></i> Multimedia</a>
+        </li>
+        <li class="nav-item {% if request.path == '/administrar/' %}active{% endif %}">
+          <a class="nav-link" href="/administrar/"><i class="fa fa-lock"></i> Administrar</a>
+        </li>
+{% if user.is_authenticated %}
+<li class="nav-item">
+  <form action="/logout/" method="POST" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit" class="nav-link" style="background: none; border: none; color: #230dca;" title="Cerrar sesión">
+      <i class="fa fa-sign-out" aria-hidden="true"></i>
+    </button>
+  </form>
+</li>
+{% endif %}
+
+      </ul>
+    </div>
+  </nav>
+
+  {% block content %} {% endblock %}
+
+  <!-- Pie de página Fino -->
+  <footer class="footer">
+    <div class="container1">
+      <p>&copy; 2024 FitEduX.cu
+        <a href="#" class="fa fa-instagram"></a>
+        <a href="#" class="fa fa-facebook"></a>
+        <a href="#" class="fa fa-youtube"></a>
+        <a href="https://wa.me/59240990?text=Hola" class="fa fa-whatsapp"></a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS y dependencias -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <!-- Script para resaltar enlaces -->
+  <script>
+    var currentUrl = window.location.href;
+    document.querySelectorAll('.navbar-nav a').forEach(function (link) {
+      if (link.href === currentUrl) {
+        link.parentElement.classList.add('active');
+      }
+    });
+
+    // Cambio de color en la navbar al hacer scroll
+    window.onscroll = function () {
+      var navbar = document.querySelector('.navbar');
+      if (document.documentElement.scrollTop > 50) {
+        navbar.classList.add('bg-dark');
+        navbar.classList.remove('bg-info');
+      } else {
+        navbar.classList.add('bg-info');
+        navbar.classList.remove('bg-dark');
+      }
+    };
+  </script>
+</body>
+
+</html>

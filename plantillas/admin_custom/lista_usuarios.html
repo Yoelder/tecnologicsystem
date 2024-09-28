@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body class="container background-color bg-dark">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="h3 text-light">Lista de Usuarios</h3>
+
+            <!-- Botón para agregar usuario y cuadro de búsqueda -->
+            <div class="btn-group">
+                <a href="{% url 'agregar_usuario' %}" class="btn btn-success">
+                    <i class="fa fa-plus-circle"></i> Agregar
+                </a>
+
+                <!-- Botón para mostrar/ocultar el cuadro de búsqueda, desplegado si hay una búsqueda activa -->
+                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm"
+                    aria-expanded="{% if busqueda %}true{% else %}false{% endif %}" aria-controls="searchForm">
+                    <i class="fa fa-search"></i> Buscar
+                </button>
+
+                <!-- Botón para mostrar/ocultar la clave de profesores -->
+                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#claveProfesorForm"
+                    aria-expanded="false" aria-controls="claveProfesorForm">
+                    <i class="fa fa-key"></i>
+                </button>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div id="messages">
+            {% for message in messages %}
+            <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(function () {
+                var messages = document.getElementById('messages');
+                if (messages) {
+                    messages.style.display = 'none';
+                }
+            }, 5000);
+        </script>
+        {% endif %}
+
+        <!-- Contenedor colapsable para la búsqueda, abierto si hay una búsqueda activa -->
+        <div class="collapse mt-3 {{ busqueda|yesno:'show,' }}" id="searchForm">
+            <div class="card card-body bg-dark text-light border-light">
+                <!-- Formulario de búsqueda (un solo input para nombre y correo) -->
+                <form method="GET" action="" class="d-flex align-items-center">
+                    <input type="text" id="busqueda" name="busqueda" class="form-control form-control-sm me-3"
+                        placeholder="Buscar nombre o correo" value="{{ busqueda }}" style="max-width: 200px;">
+                    <button type="submit" class="btn btn-primary btn-sm me-2">Buscar</button>
+                    <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary btn-sm">Restablecer</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Contenedor colapsable para la clave de profesor (tema oscuro) -->
+        <div class="collapse mt-3" id="claveProfesorForm">
+            <div class="card card-body bg-dark text-light border-light">
+                <!-- Mostrar la clave actual de profesor, y nueva clave alineadas -->
+                <form method="POST" action="" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <span class="me-3">Clave : <strong>{{ clave_profesor }}  </strong></span>
+                    <input type="text" id="nueva_clave" name="nueva_clave" class="form-control form-control-sm me-3"
+                        placeholder="Nueva clave" style="max-width: 110px;">
+                    <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-hover table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Tipo de Usuario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if usuarios %}
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.correo }}</td>
+                            <td>{{ usuario.get_tipo_usuario_display }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                    <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No se encontraron elementos</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        padding: 0.75rem;
+    }
+
+    .btn-group .btn {
+        margin-right: 0.5rem;
+    }
+
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+
+    /* Estilo para los contenedores colapsables con tema oscuro */
+    #claveProfesorForm, #searchForm {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .form-control-sm {
+        max-width: 300px;
+    }
+</style>
+{% endblock %}

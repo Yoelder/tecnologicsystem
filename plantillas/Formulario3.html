@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+
+
+<head>
+
+
+    <style>
+        /* General Styles */
+        .form-control {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            border: 1px solid #424242;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: #3b3b3b;
+            color: #ffffff;
+            border-color: #616161;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            padding-top: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Timer Container */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 5px;
+            color: #80deea;
+        }
+
+        /* Interval Section */
+        .interval-section {
+            margin-top: 20px;
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .interval-section .table {
+            margin-bottom: 0;
+            color: #e0e0e0;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.8rem;
+        }
+
+        /* Summary Section */
+        .summary {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary h5 {
+            margin-bottom: 8px;
+            color: #80deea;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 60px;
+            height: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        #start-button {
+            background-color: #388e3c;
+            color: #fff;
+        }
+
+        #reset-button {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+
+        #next-button {
+            background-color: #0288d1;
+            color: #fff;
+        }
+
+        .interval-section {
+            overflow-x: auto;
+            /* Habilita el scroll horizontal */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-4 mb-3" id="step-2">
+        <div class="timer-container">
+            <div>Cronómetro</div>
+            <i class="fas fa-clock fa-2x"></i>
+            <div class="timer text-center" id="timer">00:00</div>
+        </div>
+
+        <div class="interval-section">
+            <!-- Primera fila con la primera tabla de intervalos -->
+            <div class="row justify-content-center mb-4">
+                <!-- Centrar el contenido -->
+                <div class="col-md-8">
+                    <table class="table">
+                        <thead>
+                            <tr id="interval-header-1"></tr>
+                        </thead>
+                        <tbody>
+                            <tr id="interval-inputs-1"></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Segunda fila con la segunda tabla de intervalos -->
+            <div class="row justify-content-center">
+                <!-- Centrar el contenido -->
+                <div class="col-md-8">
+                    <table class="table">
+                        <thead>
+                            <tr id="interval-header-2"></tr>
+                        </thead>
+                        <tbody>
+                            <tr id="interval-inputs-2"></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center mt-3">
+            <button id="start-button" class="btn"><i class="fa fa-play" aria-hidden="true"></i></button>
+            <button id="reset-button" class="btn"><i class="fa fa-stop-circle" aria-hidden="true"></i></button>
+            <!-- Botón de "Seguir", inicialmente oculto -->
+            <button id="next-button" class="btn" style="display: none;">Seguir</button>
+        </div>
+
+        <div class="summary mt-3 text-center">
+            <h5><i class="fa fa-user" aria-hidden="true"></i> Nombre: <span id="nombreSummary"></span></h5>
+            <h5><i class="fa fa-user" aria-hidden="true"></i> Edad: <span id="edadSummary"></span></h5>
+            <h5><i class="fa fa-calendar" aria-hidden="true"></i> Etapa: <span id="etapaSummary"></span></h5>
+            <h5><i class="fa fa-calendar" aria-hidden="true"></i> Tiempo: <span id="etapaTime"></span></h5>
+        </div>
+
+        <div class="additional-results mt-3 text-center" id="additionalResults" style="display: none;">
+            <h5><i class="fa fa-calculator" aria-hidden="true"></i> Índice de Esfuerzo (IE): <span
+                    id="ieResult"></span>%</h5>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script>
+        let selectedTime = parseInt(localStorage.getItem('selectedTime'));
+        let intervalId;
+        let elapsedSeconds = 0;
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setupIntervalTable();
+            displaySummary();
+            loadSavedValues();
+            checkFormCompletion();  // Verifica si el formulario está completo al cargar la página
+        });
+
+        function setupIntervalTable() {
+            let intervalHeader1 = $('#interval-header-1');
+            let intervalInputs1 = $('#interval-inputs-1');
+            let intervalHeader2 = $('#interval-header-2');
+            let intervalInputs2 = $('#interval-inputs-2');
+
+            intervalHeader1.empty();
+            intervalInputs1.empty();
+            intervalHeader2.empty();
+            intervalInputs2.empty();
+
+            let intervals = [];
+            if (selectedTime === 45) {
+                intervals = [0, 10, 20, 30, 40, 45];
+            } else if (selectedTime === 50) {
+                intervals = [0, 10, 20, 30, 40, 45, 50];
+            } else if (selectedTime === 80) {
+                intervals = [0, 10, 20, 30, 40, 50, 60, 70, 75, 80];
+            }
+
+            let halfLength = Math.ceil(intervals.length / 2);
+
+            for (let i = 0; i < halfLength; i++) {
+                intervalHeader1.append('<th>' + intervals[i] + " minutos" + '</th>');
+                intervalInputs1.append('<td><input type="number" class="form-control interval-input" data-interval="' + intervals[i] + '" placeholder="Pulso"></td>');
+            }
+            for (let i = halfLength; i < intervals.length; i++) {
+                intervalHeader2.append('<th>' + intervals[i] + " minutos" + '</th>');
+                intervalInputs2.append('<td><input type="number" class="form-control interval-input" data-interval="' + intervals[i] + '" placeholder="Pulso"></td>');
+            }
+
+            // Guardar valor en localStorage cuando se cambia
+            $('.interval-input').on('input', function () {
+                const interval = $(this).data('interval');
+                const value = $(this).val();
+                localStorage.setItem('interval-' + interval, value);
+                checkFormCompletion();  // Verifica si el formulario está completo cada vez que se ingresa un valor
+            });
+        }
+
+        function loadSavedValues() {
+            $('.interval-input').each(function () {
+                const interval = $(this).data('interval');
+                const savedValue = localStorage.getItem('interval-' + interval);
+                if (savedValue) {
+                    $(this).val(savedValue);
+                }
+            });
+        }
+
+        function displaySummary() {
+            const nombre = localStorage.getItem('nombre');
+            const edad = localStorage.getItem('edad');
+            const etapa = localStorage.getItem('selectedStage');
+            const time = localStorage.getItem('selectedTime');
+
+            document.getElementById('nombreSummary').textContent = nombre ? nombre : 'N/A';
+            document.getElementById('edadSummary').textContent = edad ? edad : 'N/A';
+            document.getElementById('etapaSummary').textContent = etapa ? etapa : 'N/A';
+            document.getElementById('etapaTime').textContent = time ? time : 'N/A';
+        }
+
+        // Función que verifica si todos los campos están completos y correctos 
+        function checkFormCompletion() {
+            let allFieldsFilled = true;
+
+            // Obtener todos los inputs de intervalos
+            let intervalInputs = $('.interval-input');
+
+            // Comprobar si todos los campos están llenos
+            intervalInputs.each(function () {
+                if ($(this).val() === "") {
+                    allFieldsFilled = false;
+                }
+            });
+
+            // Solo realizar la validación si todos los campos están llenos
+            if (allFieldsFilled) {
+                validateIntervals();
+            } else {
+                $('#next-button').hide();  // Ocultar el botón "Seguir" si faltan campos por completar
+            }
+        }
+
+        function validateIntervals() {
+            let firstIntervalValue = null;
+            let lastIntervalValue = null;
+            let validIntervals = true;
+
+            // Obtener todos los inputs de intervalos
+            let intervalInputs = $('.interval-input');
+
+            // Verificar que todos los valores sean mayores o iguales a 9
+            intervalInputs.each(function (index) {
+                let value = parseInt($(this).val());
+                let interval = $(this).data('interval');
+
+                // Guardar el valor del primer y último intervalo
+                if (interval === 0) {
+                    firstIntervalValue = value;
+                } else if (index === intervalInputs.length - 1) {
+                    lastIntervalValue = value;
+                }
+
+                // Validar si algún valor es menor a 0
+                if (isNaN(value) || value < 0) {
+                    alert('Existen intervalos con valores menores a 0. Por favor, revisa los valores.');
+                    validIntervals = false;
+                    return false; // Detener la ejecución si se encuentra un valor no válido
+                }
+            });
+
+            // Solo proceder a la siguiente validación si todos los valores son mayores o iguales a 9
+
+
+            // Mostrar u ocultar el botón "Seguir" según el estado de validación
+            if (validIntervals) {
+                $('#next-button').show();  // Mostrar el botón "Seguir" si todo es válido
+            } else {
+                $('#next-button').hide();  // Ocultar el botón "Seguir" si hay algún error
+            }
+        }
+
+
+
+
+        $('#start-button').click(function () {
+            if (intervalId) return; // Evita múltiples intervalos
+            intervalId = setInterval(updateTimer, 1000);
+        });
+
+        $('#reset-button').click(function () {
+            clearInterval(intervalId);
+            intervalId = null;
+            elapsedSeconds = 0;
+            $('#timer').text('00:00');
+        });
+
+        $('#next-button').click(function () {
+            guardarDatos();
+            window.location.href = "/formulario4/";  // Redirige a la siguiente página solo si los datos son válidos
+        });
+
+        function updateTimer() {
+            elapsedSeconds++;
+            let minutes = Math.floor(elapsedSeconds / 60);
+            let seconds = elapsedSeconds % 60;
+            $('#timer').text((minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+        }
+
+        function guardarDatos() {
+            calcularPulsacionesMedias();  // Calcula pulsaciones medias primero
+            calcularEsfuerzoMaximoYIndice();  // Luego calcula K e IE usando la edad y X
+        }
+
+        function calcularPulsacionesMedias() {
+            var selectedTime = parseInt(localStorage.getItem('selectedTime'));
+            var intervalos;
+            var divisor;
+            if (selectedTime === 45) {
+                intervalos = [10, 20, 30, 40];
+                divisor = 4;
+            } else if (selectedTime === 50) {
+                intervalos = [10, 20, 30, 40, 45];
+                divisor = 5;
+            } else if (selectedTime === 80) {
+                intervalos = [10, 20, 30, 40, 50, 60, 70, 75];
+                divisor = 8;
+            } else {
+                alert('Tiempo seleccionado no válido.', selectedTime);
+                return;
+            }
+
+            let suma = 0;
+            let valoresValidos = true;
+
+            for (let i = 0; i < intervalos.length; i++) {
+                let valor = parseInt(localStorage.getItem('interval-' + intervalos[i]));
+                if (isNaN(valor) || valor <= 0) {
+                    valoresValidos = false;
+                    break;
+                }
+                suma += valor;
+            }
+
+            if (!valoresValidos) {
+                alert('Existen intervalos vacíos o con valores no válidos. Por favor, revise los valores.');
+                return;
+            }
+
+            let pulsacionesMedias = suma / divisor;
+            localStorage.setItem('pulsacionesMedias', pulsacionesMedias.toFixed(2));
+        }
+
+        function calcularEsfuerzoMaximoYIndice() {
+            const edad = parseInt(localStorage.getItem('edad'));
+
+            if (isNaN(edad)) {
+                alert('Edad no válida. Por favor, revise los datos.');
+                return;
+            }
+
+            let pulsacionesMedias = parseFloat(localStorage.getItem('pulsacionesMedias'));
+
+            if (isNaN(pulsacionesMedias)) {
+                alert('Pulsaciones Medias no calculadas o inválidas.');
+                return;
+            }
+
+            const K = 220 - edad;
+            const IE = (pulsacionesMedias * 100) / K;
+
+            localStorage.setItem('esfuerzoMaximo', K.toFixed(2));
+            localStorage.setItem('indiceEsfuerzo', IE.toFixed(2));
+
+            mostrarEsfuerzoYIndice(IE);
+        }
+
+        function mostrarEsfuerzoYIndice(IE) {
+            $('#additionalResults').show();
+            $('#ieResult').text(IE.toFixed(2));
+        }
+    </script>
+
+</body>
+
+
+{% endblock %}

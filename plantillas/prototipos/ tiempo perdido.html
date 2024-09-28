@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo del Indicador de Rendimiento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2 {
+            color: #555;
+        }
+        .calculation {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .step {
+            margin-bottom: 15px;
+        }
+        .step span {
+            font-weight: bold;
+            color: #333;
+        }
+        .equation {
+            background-color: #e7e7e7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .final-result {
+            font-weight: bold;
+            color: #000;
+        }
+        input[type="number"] {
+            padding: 5px;
+            margin: 5px 0;
+            width: 100px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Cálculo del Indicador de Rendimiento</h1>
+
+<div class="calculation">
+    <h2>Ingrese los valores para calcular el tiempo perdido (TP)</h2>
+
+    <div class="step">
+        <label for="fcm">FCM (Frecuencia Cardíaca Máxima en pulsaciones por minuto):</label>
+        <input type="number" id="fcm" step="0.01" required>
+
+        <label for="eme">EME (Esfuerzo Medio en %):</label>
+        <input type="number" id="eme" step="0.01" required>
+
+        <label for="rr">RR (Ritmo de Recuperación en pulsaciones por minuto):</label>
+        <input type="number" id="rr" step="0.01" required>
+
+        <label for="tm">TM (Tiempo Medido en segundos):</label>
+        <input type="number" id="tm" step="0.01" required>
+    </div>
+
+    <button onclick="calcularTP()">Calcular TP</button>
+
+    <div class="result" id="resultado">
+        <!-- El resultado se mostrará aquí -->
+    </div>
+</div>
+
+<script>
+    function calcularTP() {
+        // Obtener los valores de los campos de entrada
+        const fcm = parseFloat(document.getElementById('fcm').value);
+        const eme = parseFloat(document.getElementById('eme').value) / 100; // Convertir porcentaje a decimal
+        const rr = parseFloat(document.getElementById('rr').value);
+        const tm = parseFloat(document.getElementById('tm').value);
+
+        // Validar si todos los campos tienen valores
+        if (isNaN(fcm) || isNaN(eme) || isNaN(rr) || isNaN(tm)) {
+            document.getElementById('resultado').innerText = "Por favor, ingrese todos los valores.";
+            return;
+        }
+
+        // Realizar el cálculo paso a paso
+        const parteSuperior = (fcm * eme) - rr;
+        const parteInferior = (parteSuperior / tm);
+        const tp = parteInferior / tm;
+
+        // Mostrar el resultado en la página
+        document.getElementById('resultado').innerHTML = `
+            <div class="equation">TP = ${parteSuperior.toFixed(1)}p ·/· ${parteInferior.toFixed(1)}pseg</div>
+            <div class="equation final-result">TP = ${tp.toFixed(1)}seg</div>
+        `;
+    }
+</script>
+
+</body>
+</html>

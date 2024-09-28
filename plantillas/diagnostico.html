@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Física del Estudiante</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: rgba(33, 33, 33, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #64b5f6; /* Azul claro */
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #64b5f6; /* Azul claro */
+        }
+
+        .form-control {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .form-control-sm {
+            font-size: 0.875rem;
+            padding: 5px;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #e0e0e0;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #333;
+        }
+
+        th {
+            background-color: #64b5f6; /* Azul claro */
+            color: #121212;
+        }
+
+        td input {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            border-radius: 4px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #64b5f6; /* Azul claro */
+            color: #121212;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #42a5f5; /* Azul ligeramente más oscuro */
+        }
+
+        .form-group i {
+            margin-right: 8px;
+            color: #64b5f6; /* Azul claro */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1><i class="fas fa-heartbeat"></i> Evaluación Física del Estudiante</h1>
+
+        <!-- Información del Estudiante -->
+        <form>
+            <div class="form-row">
+                <div class="col-md-4 form-group">
+                    <label for="nombreEscuela"><i class="fas fa-school"></i> Nombre de la escuela:</label>
+                    <input type="text" id="nombreEscuela" name="nombreEscuela" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="nombreEscolar"><i class="fas fa-user-graduate"></i> Nombre del escolar:</label>
+                    <input type="text" id="nombreEscolar" name="nombreEscolar" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
+                    <input type="number" id="edad" name="edad" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-4 form-group">
+                    <label for="grado"><i class="fas fa-layer-group"></i> Grado:</label>
+                    <input type="number" id="grado" name="grado" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="grupo"><i class="fas fa-users"></i> Grupo:</label>
+                    <input type="text" id="grupo" name="grupo" class="form-control">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="numeroClase"><i class="fas fa-list-ol"></i> No. de clase:</label>
+                    <input type="text" id="numeroClase" name="numeroClase" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="etapaCurso"><i class="fas fa-calendar-alt"></i> Etapa del curso:</label>
+                <select id="etapaCurso" name="etapaCurso" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+
+            <!-- Tabla de Indicadores -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indicador</th>
+                        <th>Criterio de evaluación</th>
+                        <th>Cantidad de pulsaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Talla</td>
+                        <td><input type="number" name="talla" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesTalla" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Peso</td>
+                        <td><input type="number" name="peso" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesPeso" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Fuerza</td>
+                        <td><input type="number" name="fuerza" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesFuerza" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Brazos</td>
+                        <td><input type="number" name="brazos" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesBrazos" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Abdominales V y D</td>
+                        <td><input type="number" name="abdominales" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesAbdominales" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Piernas</td>
+                        <td><input type="number" name="piernas" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesPiernas" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Rapidez</td>
+                        <td><input type="number" name="rapidez" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesRapidez" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Traslación</td>
+                        <td><input type="number" name="traslacion" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesTraslacion" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Reacción</td>
+                        <td><input type="number" name="reaccion" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesReaccion" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Resistencia</td>
+                        <td><input type="number" name="resistencia" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesResistencia" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Saltabilidad</td>
+                        <td><input type="number" name="saltabilidad" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesSaltabilidad" class="form-control-sm"></td>
+                    </tr>
+                    <tr>
+                        <td>Flexibilidad</td>
+                        <td><input type="number" name="flexibilidad" class="form-control-sm"></td>
+                        <td><input type="number" name="pulsacionesFlexibilidad" class="form-control-sm"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Enviar</button>
+        </form>
+    </div>
+</body>
+
+</html>

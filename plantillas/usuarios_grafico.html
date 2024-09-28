@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Gráficos Modernos de Usuarios y Evaluaciones{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <!-- Título principal con espacio inferior -->
+  <h1 class="text-center text-light mb-4">
+    <i class="fas fa-chart-pie"></i> Estadísticas de Usuarios y Evaluaciones
+  </h1>
+
+  <!-- Contenedor de los gráficos, centrado y responsive -->
+  <div class="row justify-content-center">
+    
+    <!-- Gráfico de Usuarios -->
+    <div class="col-md-6 col-lg-5 mb-4">
+      <div class="chart-container bg-dark rounded p-3 shadow" style="max-height: 400px;">
+        <h2 class="text-center text-light mb-3" style="font-size: 1rem;">
+          <i class="fas fa-users"></i> Distribución de Usuarios
+        </h2>
+        <canvas id="usuariosChart" class="chart"></canvas>
+        <div class="text-center text-light mt-3" style="font-size: 0.9rem;">
+        
+        </div>
+      </div>
+      <h1></h1>
+    </div>
+
+    <!-- Gráfico de Evaluaciones -->
+    <div class="col-md-6 col-lg-5 mb-4">
+      <div class="chart-container bg-dark rounded p-3 shadow" style="max-height: 400px;">
+        <h2 class="text-center text-light mb-3" style="font-size: 1rem;">
+          <i class="fas fa-tasks"></i> Evaluaciones Realizadas
+        </h2>
+        <canvas id="evaluacionesChart" class="chart"></canvas>
+        <div class="text-center text-light mt-3" style="font-size: 0.9rem;">
+          
+        </div>
+      </div>
+      <h1></h1>
+    </div>
+
+  </div>
+</div>
+
+<!-- Cargar Chart.js diferido al final -->
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Gráfico de Usuarios (Pie Chart)
+    var ctx1 = document.getElementById('usuariosChart').getContext('2d');
+    var usuariosChart = new Chart(ctx1, {
+      type: 'pie',
+      data: {
+        labels: ['Estudiantes', 'Profesores', 'Admins'],
+        datasets: [{
+          data: [{{ estudiantes_count }}, {{ profesores_count }}, {{ admins_count }}],
+          backgroundColor: ['#36a2eb', '#ffcd56', '#ff6384'],
+          hoverBackgroundColor: ['#36a2ebcc', '#ffcd56cc', '#ff6384cc'],
+          borderWidth: 0,
+          hoverOffset: 8  // Reducción del desplazamiento al hacer hover
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { size: 10, family: "'Poppins', sans-serif" },  // Reducción del tamaño de fuente
+              color: '#fff'
+            }
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#000',
+            bodyColor: '#333',
+            borderWidth: 1,
+            borderColor: '#ddd',
+            bodyFont: { size: 10 }
+          }
+        }
+      }
+    });
+
+    // Gráfico de Evaluaciones (Bar Chart)
+    var ctx2 = document.getElementById('evaluacionesChart').getContext('2d');
+    var evaluacionesChart = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Evaluaciones'],
+        datasets: [{
+          label: 'Total Evaluaciones',
+          data: [{{ total_evaluaciones }}],
+          backgroundColor: ['#1abc9c'],
+          borderColor: ['#16a085'],
+          borderWidth: 1,
+          hoverBackgroundColor: ['#16a085']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#fff', font: { size: 10 } }  // Reducción del tamaño de fuente en el eje y
+          },
+          x: {
+            ticks: { color: '#fff', font: { size: 10 } }  // Reducción del tamaño de fuente en el eje x
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#000',
+            bodyColor: '#333',
+            borderWidth: 1,
+            borderColor: '#ddd',
+            bodyFont: { size: 10 }
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Fondo oscuro general */
+  html, body {
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    height: 100%;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 300px;  /* Altura fija reducida */
+    max-height: 400px;  /* Altura máxima para evitar desbordes */
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Ajuste del tamaño de los títulos y leyendas */
+  h2 {
+    font-size: 1rem;  /* Reducido para encajar mejor */
+  }
+
+  /* Ajuste del tamaño de los textos */
+  p {
+    font-size: 0.9rem;  /* Texto ligeramente más pequeño */
+  }
+
+  /* Responsividad mejorada */
+  @media (max-width: 768px) {
+    .chart-container {
+      height: 200px;  /* Reducimos la altura en pantallas pequeñas */
+    }
+
+    h1, h2 {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,146 @@
+API_KEY_LIST=[
+'AIzaSyBQlSAqu8n9ncLLk83T76NO93RpzSw3LVc',
+'AIzaSyAzyAwlNuh7LDBMwNNVIw7DSoth-iSzO4Q',
+'AIzaSyCw_H0UyOTcOs2Al1wGpPzeqlrXf50Lmdo',
+'AIzaSyC5BTO1i9PQMSE0zV0EDeivmooV40L9sDA',
+'AIzaSyCvweiFctY0tJkHGfsUdMPoEVoQtVHb8Bg',
+'AIzaSyACcyWgcrloI5nJ6p5NeiVT5j8xMOYgq5Y']
+
+#chat con ia
+import http.client
+import json
+from django.shortcuts import render
+from django.http import JsonResponse
+
+API_KEY = "AIzaSyCw_H0UyOTcOs2Al1wGpPzeqlrXf50Lmdo"
+API_URL = "/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + API_KEY
+API_HOST = "generativelanguage.googleapis.com"
+
+def chat(request):
+    if request.method == "POST":
+        user_message = request.POST.get("message")
+
+        # Prompt inicial con restricciones y enfoque de conversación
+        initial_prompt = """Eres un asistente que responde de manera directa y formal. 
+                            Evita respuestas de contenido ofensivo o político. Solo responde 
+                            lo relacionado con educación física y deporte."""
+        
+
+        # Configurar el cuerpo de la solicitud JSON
+        data = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": initial_prompt},
+                        {"text": user_message}
+                    ]
+                }
+            ]
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        # Establecer la conexión HTTP con el servidor
+        conn = http.client.HTTPSConnection(API_HOST)
+
+        # Convertir el diccionario de datos a JSON
+        json_data = json.dumps(data)
+
+        # Enviar la solicitud POST
+        conn.request("POST", API_URL, body=json_data, headers=headers)
+
+        # Obtener la respuesta
+        response = conn.getresponse()
+        response_data = response.read()
+        conn.close()
+
+        # Procesar la respuesta
+        if response.status == 200:
+            response_json = json.loads(response_data)
+            if "candidates" in response_json and response_json["candidates"]:
+                ai_response = response_json["candidates"][0]["content"]["parts"][0]["text"]
+            else:
+                ai_response = "Lo siento, no se pudo obtener una respuesta adecuada de la API."
+        else:
+            ai_response = f"Error: {response.status} - {response_data.decode('utf-8')}"
+
+        return JsonResponse({"response": ai_response.replace('*',' ')})
+
+    return render(request, "chat.html")
+
+import http.client
+import json
+from django.shortcuts import render
+from django.http import JsonResponse
+
+# Lista de claves API
+API_KEY_LIST=[
+'AIzaSyBQlSAqu8n9ncLLk83T76NO93RpzSw3LVc',
+'AIzaSyAzyAwlNuh7LDBMwNNVIw7DSoth-iSzO4Q',
+'AIzaSyCw_H0UyOTcOs2Al1wGpPzeqlrXf50Lmdo',
+'AIzaSyC5BTO1i9PQMSE0zV0EDeivmooV40L9sDA',
+'AIzaSyCvweiFctY0tJkHGfsUdMPoEVoQtVHb8Bg',
+'AIzaSyACcyWgcrloI5nJ6p5NeiVT5j8xMOYgq5Y']
+
+API_HOST = "generativelanguage.googleapis.com"
+
+def chat(request):
+    if request.method == "POST":
+        user_message = request.POST.get("message")
+
+        # Prompt inicial con restricciones y enfoque de conversación
+        initial_prompt = """Eres un asistente que responde de manera directa y formal. 
+                            Evita respuestas de contenido ofensivo o político. Solo responde 
+                            lo relacionado con educación física y deporte."""
+
+        # Configurar el cuerpo de la solicitud JSON
+        data = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": initial_prompt},
+                        {"text": user_message}
+                    ]
+                }
+            ]
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        ai_response = None
+        for api_key in API_KEY_LIST:
+            API_URL = f"/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}"
+            
+            # Establecer la conexión HTTP con el servidor
+            conn = http.client.HTTPSConnection(API_HOST)
+
+            # Convertir el diccionario de datos a JSON
+            json_data = json.dumps(data)
+
+            # Enviar la solicitud POST
+            conn.request("POST", API_URL, body=json_data, headers=headers)
+
+            # Obtener la respuesta
+            response = conn.getresponse()
+            response_data = response.read()
+            conn.close()
+
+            # Procesar la respuesta
+            if response.status == 200:
+                response_json = json.loads(response_data)
+                if "candidates" in response_json and response_json["candidates"]:
+                    ai_response = response_json["candidates"][0]["content"]["parts"][0]["text"]
+                    break
+            else:
+                # Si hubo un error con esta clave API, loguear el error o manejarlo según sea necesario
+                error_message = f"Error con clave API {api_key}: {response.status} - {response_data.decode('utf-8')}"
+                print(error_message)
+
+        if ai_response is None:
+            ai_response = "Lo siento, no se pudo obtener una respuesta adecuada de la API."
+
+        return JsonResponse({"response": ai_response.replace('*', ' ')})
+
+    return render(request, "chat.html")
